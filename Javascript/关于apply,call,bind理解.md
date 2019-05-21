@@ -63,3 +63,55 @@ let domNodes = Array.prototype.slice.call(tagName);
 - apply、call、bind第一个参数都是this要指向的对象
 - apply、call、bind都可以利用后续参数传参
 - bind返回的是对应函数；apply、call则是立即调用
+
+
+
+补充：
+
+在函数内部，`arguments`是一个`类数组对象`，用于保存函数参数，其内部存在的2个属性：`callee`，`caller`
+
+- `callee:`是一个指针，指向拥有这个`arguments`对象的函数
+
+  ```javascript
+  function cool(){
+      console.log(arguments.callee);
+  }
+  
+  cool();
+  
+  //结果打印出来（chrome下）：
+  ƒ cool(){
+   console.log(arguments.callee);
+  }
+  ----------------------------------------------------------------------------------------------
+  function add(num) {
+      if(num <= 1){
+          return 1;
+      }else{
+          return num * arguments.callee(num-1);
+      }
+  }
+  add(10);    //3628800
+  ```
+
+- `caller`：保留着调用`当前函数`的`函数`的引用 (全局作用域下调用该函数，caller为null)
+
+  ```javascript
+  function add() {
+      addChild();
+  }
+  
+  function addChild() {
+      console.log(addChild.caller);
+  }
+  
+  add();
+  
+  //在chrome下打印结果：
+  ƒ add() {
+    addChild();
+  }
+  
+  ```
+
+  
